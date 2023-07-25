@@ -1,4 +1,4 @@
-package com.example.space.data
+ package com.example.space.data
 
 import android.content.Context
 import androidx.room.Database
@@ -10,7 +10,7 @@ import androidx.room.RoomDatabase
     version = 1,
     exportSchema = false)
 abstract class NoteRoomDatabase : RoomDatabase() {
-    abstract fun noteDao(): NotesDao
+    abstract val noteDao: NotesDao
 
     companion object {
         @Volatile

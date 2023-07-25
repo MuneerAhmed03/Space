@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
@@ -16,6 +17,9 @@ interface NotesDao {
     @Delete
     suspend fun deleteNote(note: Note)
 
+    @Update
+    suspend fun updateNote(note: Note)
+
     @Query("SELECT * FROM note")
     fun getNotes() : Flow<List<Note>>
 
@@ -23,5 +27,5 @@ interface NotesDao {
     suspend fun getNotebyId(id:Int): Note?
 
     @Query("SELECT * FROM note WHERE date = :targetDate")
-    fun getEntityByDate(targetDate: LocalDate): Note?
+    fun getNotesByDate(targetDate: LocalDate): Flow<List<Note>>
 }
