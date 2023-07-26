@@ -1,5 +1,6 @@
 package com.example.space.ui
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.space.R
 import com.example.space.databinding.FragmentCalendarBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -99,8 +101,17 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
     override fun onItemClick(position: Int, dayText: String?) {
         if (dayText != "") {
             val message = "Selected Date " + dayText + " " + monthYearFromDate(selectedDate)
-
+            showdialog(dayText)
             Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+        }
+    }
+    private fun showdialog(dayText: String?){
+        val customView = LayoutInflater.from(context).inflate(R.layout.dialog_layout,null)
+        context?.let {
+            MaterialAlertDialogBuilder(it)
+                .setView(customView)
+                .setTitle(dayText + " " + monthYearFromDate(selectedDate) )
+                .show()
         }
     }
 

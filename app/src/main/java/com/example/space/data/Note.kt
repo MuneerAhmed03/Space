@@ -9,7 +9,7 @@ data class Note(
     val title  : String,
     val content : String,
     val timestamp: Long,
-    val date: LocalDate,
+    val date: Long,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 )
