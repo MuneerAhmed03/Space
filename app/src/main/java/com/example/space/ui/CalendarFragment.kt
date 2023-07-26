@@ -99,6 +99,7 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
     override fun onItemClick(position: Int, dayText: String?) {
         if (dayText != "") {
             val message = "Selected Date " + dayText + " " + monthYearFromDate(selectedDate)
+
             Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
         }
     }
