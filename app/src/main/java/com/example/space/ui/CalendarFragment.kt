@@ -1,13 +1,16 @@
 package com.example.space.ui
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.space.R
@@ -105,13 +108,24 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
             Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
         }
     }
+
     private fun showdialog(dayText: String?){
         val customView = LayoutInflater.from(context).inflate(R.layout.dialog_layout,null)
         context?.let {
-            MaterialAlertDialogBuilder(it)
+            val eventDialog = MaterialAlertDialogBuilder(it)
                 .setView(customView)
                 .setTitle(dayText + " " + monthYearFromDate(selectedDate) )
-                .show()
+                .create()
+            val displayMetrics =DisplayMetrics()
+            eventDialog.window?.apply {
+//                windowManager.currentWindowMetrics
+                windowManager.defaultDisplay.getMetrics(displayMetrics)
+                val maxHeight = (displayMetrics.heightPixels * 0.8).toInt()
+
+                // Set the height to 80% of the screen height
+                setLayout(ViewGroup.LayoutParams.MATCH_PARENT, maxHeight)
+            }
+            eventDialog.show()
         }
     }
 

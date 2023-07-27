@@ -8,8 +8,7 @@ import java.time.LocalDate
 data class Note(
     val title  : String,
     val content : String,
-    val timestamp: Long,
-    val date: Long,
+    val date: String,
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0
 )

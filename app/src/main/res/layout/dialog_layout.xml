@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:context=".ListFragment">
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
 
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/notes_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="809dp"
+                            android:paddingHorizontal="15dp"
+                            android:paddingVertical="10dp"
+                            tools:listitem="@layout/notes_list_item" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
+                </FrameLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="135dp" />
+            android:layout_width="wrap_content"
+            android:src="@android:drawable/ic_input_add"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/app_name" />
 
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:layout_constraintVertical_bias="0.021"
-            tools:layout_editor_absoluteX="-25dp" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-</com.google.android.material.card.MaterialCardView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

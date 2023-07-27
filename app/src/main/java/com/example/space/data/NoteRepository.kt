@@ -19,7 +19,7 @@ class NoteRepository(private val notesDao: NotesDao) {
     suspend fun getNoteById(id : Int) : Note?{
         return notesDao.getNotebyId(id)
     }
-    suspend fun getNoteByDate(targetDate: Long):Flow<List<Note>>{
+    fun getNoteByDate(targetDate: String):Flow<List<Note>>{
         return notesDao.getNotesByDate(targetDate)
     }
 
