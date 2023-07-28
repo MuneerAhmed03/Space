@@ -1,18 +1,28 @@
 package com.example.space.ui
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.space.MainApplication
 import com.example.space.data.Note
-import com.example.space.data.NoteRepository
 import com.example.space.data.NotesDao
+import com.example.space.data.NoteRepository
+import com.example.space.data.NoteRoomDatabase
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.io.InvalidClassException
 
-class NotesViewModel(private val repo:NoteRepository) : ViewModel() {
+class NotesViewModel(application: Application) : AndroidViewModel(application) {
+    private val repo:NoteRepository
 
+    init {
+        val dao=NoteRoomDatabase.getDatabase(application).notesDao()
+        repo=NoteRepository(dao)
+    }
     private fun insertNote(note: Note){
         viewModelScope.launch {
             repo.insertNote(note)
@@ -36,7 +46,7 @@ class NotesViewModel(private val repo:NoteRepository) : ViewModel() {
         }
     }
     private fun getUpdatedNoteEntry(
-        noteId: Int,
+        noteId: Long,
         title: String,
         content: String,
         date: String
@@ -49,7 +59,7 @@ class NotesViewModel(private val repo:NoteRepository) : ViewModel() {
         )
     }
     fun updateNote(
-        noteId: Int,
+        noteId: Long,
         title: String,
         content: String,
         note: String
@@ -58,23 +68,16 @@ class NotesViewModel(private val repo:NoteRepository) : ViewModel() {
         updateNote(updatedNote)
     }
 
-    fun showNotes(date: String):LiveData<List<Note>>{
-        val allNote: LiveData<List<Note>> = repo.getNoteByDate(date).asLiveData()
-        return allNote
-    }
+//    fun showNotes(date: String):LiveData<List<Note>>{
+//        val allNote: LiveData<List<Note>> = repo.getNoteByDate(date).asLiveData()
+//        return allNote
+//    }
     fun deleteNote(note: Note){
         viewModelScope.launch {
             repo.deleteNote(note)
         }
     }
-    class InventoryViewModelFactory(private val repo: NoteRepository): ViewModelProvider.Factory{
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            //checking if model claas matches
-            if (modelClass.isAssignableFrom(NotesViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return NotesViewModel(repo) as T
-            }
-            throw IllegalArgumentException("Unknown ViewModel class")
-        }
+    fun getTodayNotes(date: String) : LiveData<List<Note>> {
+        return repo.getNoteByDate(date)
     }
 }

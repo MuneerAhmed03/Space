@@ -11,9 +11,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.space.MainApplication
 import com.example.space.R
+import com.example.space.databinding.DialogLayoutBinding
 import com.example.space.databinding.FragmentCalendarBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.time.LocalDate
@@ -22,11 +27,17 @@ import java.time.format.DateTimeFormatter
 
 
 class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
-    private var binding : FragmentCalendarBinding?= null
-
+    private var binding : FragmentCalendarBinding?=null
     private var monthYearText: TextView? = null
     private var calendarRecyclerView: RecyclerView? = null
     private var selectedDate: LocalDate? = null
+
+    private lateinit var viewModel: NotesViewModel
+    private lateinit var notesListAdapter: NotesAdapter
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[NotesViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -103,6 +114,7 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
 
     override fun onItemClick(position: Int, dayText: String?) {
         if (dayText != "") {
+
             val message = "Selected Date " + dayText + " " + monthYearFromDate(selectedDate)
             showdialog(dayText)
             Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
@@ -110,7 +122,18 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
     }
 
     private fun showdialog(dayText: String?){
+
+        val todayNotes =viewModel.getTodayNotes(selectedDate.toString())
         val customView = LayoutInflater.from(context).inflate(R.layout.dialog_layout,null)
+        val recyclerView=customView.findViewById<RecyclerView>(R.id.notes_list)
+        notesListAdapter=NotesAdapter(todayNotes){
+
+        }
+        recyclerView.layoutManager=LinearLayoutManager(activity)
+        recyclerView.adapter=notesListAdapter
+        todayNotes.observe(viewLifecycleOwner){
+            notesListAdapter.submitList(it)
+        }
         context?.let {
             val eventDialog = MaterialAlertDialogBuilder(it)
                 .setView(customView)

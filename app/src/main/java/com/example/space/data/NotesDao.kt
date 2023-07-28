@@ -24,7 +24,7 @@ interface NotesDao {
     fun getNotes() : Flow<List<Note>>
 
     @Query("SELECT * FROM note WHERE id= :id")
-    suspend fun getNotebyId(id:Int): Note?
+    fun getNotebyId(id:Long): Note?
 
     @Query("SELECT * FROM note WHERE date = :targetDate")
     fun getNotesByDate(targetDate: String): Flow<List<Note>>
