@@ -1,7 +1,6 @@
 package com.example.space.ui
 
-import android.content.Context
-import android.os.Build
+
 import android.os.Bundle
 import android.util.DisplayMetrics
 import androidx.fragment.app.Fragment
@@ -10,30 +9,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.space.MainApplication
 import com.example.space.R
-import com.example.space.databinding.DialogLayoutBinding
 import com.example.space.databinding.FragmentCalendarBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 
 class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
-    private var binding : FragmentCalendarBinding?=null
+    private var binding: FragmentCalendarBinding? = null
     private var monthYearText: TextView? = null
     private var calendarRecyclerView: RecyclerView? = null
     private var selectedDate: LocalDate? = null
 
     private lateinit var viewModel: NotesViewModel
     private lateinit var notesListAdapter: NotesAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[NotesViewModel::class.java]
@@ -52,12 +49,10 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
             prev.setOnClickListener { previousMonthAction(view) }
             next.setOnClickListener { nextMonthAction(view) }
         }
+
         return fragmentBinding.root
     }
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//
-//    }
+
     private fun initWidgets() {
         calendarRecyclerView = binding?.calendarRecyclerView
         monthYearText = binding?.monthYearTV
@@ -88,7 +83,7 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
         //prepares array for the month
         for (i in 1..42) {
             if (i <= dayOfWeek || i > daysInMonth + dayOfWeek) {
-                //blank spaces to in calendar for the days befroe the first day of the month
+                //blank spaces to in calendar for the days before the first day of the month
                 daysInMonthArray.add("")
             } else {
                 daysInMonthArray.add((i - dayOfWeek).toString())
@@ -117,29 +112,33 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
 
             val message = "Selected Date " + dayText + " " + monthYearFromDate(selectedDate)
             showdialog(dayText)
+
             Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun showdialog(dayText: String?){
+    fun showdialog(dayText: String?) {
 
-        val todayNotes =viewModel.getTodayNotes(selectedDate.toString())
-        val customView = LayoutInflater.from(context).inflate(R.layout.dialog_layout,null)
-        val recyclerView=customView.findViewById<RecyclerView>(R.id.notes_list)
-        notesListAdapter=NotesAdapter(todayNotes){
-
+        val dateString = dayText + " " + monthYearFromDate(selectedDate)
+        val todayNotes = viewModel.getTodayNotes(dateString)
+        val customView = LayoutInflater.from(context).inflate(R.layout.dialog_layout, null)
+        val recyclerView = customView.findViewById<RecyclerView>(R.id.notes_list)
+        notesListAdapter = NotesAdapter(todayNotes) {
+            AddEventFragment.newInstance(it, dateString)
+                .show(childFragmentManager, "Add Event Fragment")
         }
-        recyclerView.layoutManager=LinearLayoutManager(activity)
-        recyclerView.adapter=notesListAdapter
-        todayNotes.observe(viewLifecycleOwner){
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.adapter = notesListAdapter
+        todayNotes.observe(viewLifecycleOwner) {
             notesListAdapter.submitList(it)
         }
+        val fab = customView.findViewById<FloatingActionButton>(R.id.fab)
         context?.let {
             val eventDialog = MaterialAlertDialogBuilder(it)
                 .setView(customView)
-                .setTitle(dayText + " " + monthYearFromDate(selectedDate) )
+                .setTitle(dayText + " " + monthYearFromDate(selectedDate))
                 .create()
-            val displayMetrics =DisplayMetrics()
+            val displayMetrics = DisplayMetrics()
             eventDialog.window?.apply {
 //                windowManager.currentWindowMetrics
                 windowManager.defaultDisplay.getMetrics(displayMetrics)
@@ -148,8 +147,12 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
                 // Set the height to 80% of the screen height
                 setLayout(ViewGroup.LayoutParams.MATCH_PARENT, maxHeight)
             }
+            fab.setOnClickListener {
+                AddEventFragment.newInstance(0, dateString)
+                    .show(childFragmentManager, "Add Event Fragment")
+            }
             eventDialog.show()
         }
-    }
 
+    }
 }

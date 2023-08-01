@@ -3,7 +3,6 @@ package com.example.space.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
 
 class NoteRepository(private val notesDao: NotesDao) {
     suspend fun insertNote(note: Note){
@@ -15,13 +14,16 @@ class NoteRepository(private val notesDao: NotesDao) {
     suspend fun updateNote(note: Note){
         return notesDao.updateNote(note)
     }
+    fun deleteNotes(entities: List<Note>) {
+        notesDao.deleteNotes(entities)
+    }
     fun getNotes(): Flow<List<Note>>{
         return notesDao.getNotes()
     }
-    fun getNoteById(id : Long) : Note?{
+    fun getNoteById(id : Long) : LiveData<Note>{
         return notesDao.getNotebyId(id)
     }
-    fun getNoteByDate(targetDate: String):LiveData<List<Note>>{
+     fun getNoteByDate(targetDate: String):LiveData<List<Note>>{
         return notesDao.getNotesByDate(targetDate).asLiveData()
     }
 

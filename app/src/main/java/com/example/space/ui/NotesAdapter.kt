@@ -1,8 +1,6 @@
 package com.example.space.ui
 
 import android.view.LayoutInflater
-import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.DiffUtil
@@ -19,8 +17,6 @@ class NotesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotesViewHolder {
         return NotesViewHolder(NotesListItemBinding.inflate(LayoutInflater.from(parent.context)))
     }
-
-
 
     override fun onBindViewHolder(holder: NotesViewHolder, position: Int) {
         getItem(position)?.let { holder.bind(it) }

@@ -6,4 +6,7 @@
     </style>
 
     <style name="Theme.SPACE" parent="Base.Theme.SPACE" />
+    <style name="fullscreendialog" parent="Theme.AppCompat.DayNight.DialogWhenLarge"    >
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>

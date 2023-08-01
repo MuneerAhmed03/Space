@@ -14,13 +14,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/notes_list"
-                            android:layout_width="match_parent"
-                            android:layout_height="809dp"
-                            android:paddingHorizontal="15dp"
-                            android:paddingVertical="10dp"
-                            tools:listitem="@layout/notes_list_item" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/notes_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingHorizontal="15dp"
+                        android:paddingVertical="10dp"
+                        tools:listitem="@layout/notes_list_item" />
 
                 </FrameLayout>
 

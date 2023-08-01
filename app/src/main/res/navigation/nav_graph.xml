@@ -8,5 +8,23 @@
     <fragment
         android:id="@+id/calendarFragment"
         android:name="com.example.space.ui.CalendarFragment"
-        android:label="CalendarFragment" />
+        android:label="CalendarFragment" >
+        <action
+            android:id="@+id/action_calendarFragment_to_addEventFragment3"
+            app:destination="@id/addEventFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEventFragment3"
+        android:name="com.example.space.ui.AddEventFragment"
+        android:label="AddEventFragment" >
+        <argument
+            android:name="id"
+            app:argType="long" />
+        <argument
+            android:name="date"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_addEventFragment3_to_calendarFragment"
+            app:destination="@id/calendarFragment" />
+    </fragment>
 </navigation>
