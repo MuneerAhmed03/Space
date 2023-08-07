@@ -1,17 +1,31 @@
 package com.example.space.ui
 
+import android.app.AlarmManager
 import android.app.Dialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.space.Notification
 import com.example.space.R
+import com.example.space.channelId
 import com.example.space.data.Note
 import com.example.space.databinding.FragmentAddEventBinding
+import com.example.space.messageExtra
+import com.example.space.notificationID
+import com.example.space.titleExtra
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -19,7 +33,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Locale
+import java.util.TimeZone
 
 
 class AddEventFragment : BottomSheetDialogFragment() {
@@ -73,12 +89,11 @@ class AddEventFragment : BottomSheetDialogFragment() {
         // Inflate the layout for this fragment
         _binding= FragmentAddEventBinding.inflate(inflater,container,false)
         val binding=_binding
-
+        binding?.root?.let { createNotificationChannel(it.context) }
         arguments?.let {
             id = it.getLong(ARG_ID, 0L)
             dateText = it.getString(ARG_DATE_TEXT)
         }
-        Log.i("AddEventFragment", "dateText: $dateText")
         if(id>0L) {
             viewModel.getNotesById(id).observe(this.viewLifecycleOwner) { event ->
                 Log.i("AddEventFragment", "idText: $id")
@@ -100,8 +115,68 @@ class AddEventFragment : BottomSheetDialogFragment() {
                 }
             }
         }
+
         return binding?.root
     }
+
+
+    private fun scheduleNotification(context: Context, localDate: LocalDate) {
+        Log.i("schedule Notification", "Scheduled for $localDate")
+        val intent =Intent(context,Notification::class.java)
+        val title = binding.titleText.text.toString()
+        val message = binding.noteText.text.toString()
+        intent.putExtra(messageExtra,message)
+        intent.putExtra(titleExtra,title)
+
+        val pendingIntent= PendingIntent.getBroadcast(
+            context,
+            notificationID.hashCode(),
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+        val alarmManager =context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val time =getTime(localDate)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (alarmManager.canScheduleExactAlarms()) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    time,
+                    pendingIntent
+                )
+            }
+        }
+        else{
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                time,
+                pendingIntent
+            )
+        }
+    }
+
+    private fun getTime(localDate: LocalDate): Long {
+        val calendar=Calendar.getInstance()
+        calendar.set(
+            localDate.year,
+            localDate.monthValue,
+            localDate.dayOfMonth,
+            13,
+            5,
+            0
+        )
+        return calendar.timeInMillis
+    }
+
+    private fun createNotificationChannel(context: Context) {
+        val name ="Event Notification"
+        val desc ="Notifies event"
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel(channelId,name, importance)
+        channel.description=desc
+        val notificationManager =context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -122,6 +197,7 @@ class AddEventFragment : BottomSheetDialogFragment() {
                     binding.noteText.text.toString(),
                     date
                 )
+            scheduleNotification(requireContext(),convertStringToLocalDate(date))
             }
 
     }

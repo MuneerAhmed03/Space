@@ -5,5 +5,8 @@ import com.example.space.data.NoteRoomDatabase
 
 class MainApplication : Application(){
 
-    val database : NoteRoomDatabase by lazy { NoteRoomDatabase.getDatabase(this) }
+    val database : NoteRoomDatabase by lazy {
+        NoteRoomDatabase.getDatabase(this)
+    }
+
 }
