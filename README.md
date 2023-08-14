@@ -6,7 +6,7 @@ Space is an Android space repition system that enchance learning and enables lon
 
 ## Features
 
-- **Access calendar**
+- **Access calendar**<br>
 <img src="https://github.com/MuneerAhmed03/Space/assets/97833696/3cf2f031-c680-4185-92d7-c737c0e4dfab" alt="first_screen" align="left" width="200" ><br>
 - **Record what you learned today**
 <img src="https://github.com/MuneerAhmed03/Space/assets/97833696/0f953348-c6b5-4e6a-b95b-b7e0e001159c" alt="first_screen" align="left" width="200" style="margin: 10px;" ><img src="https://github.com/MuneerAhmed03/Space/assets/97833696/7bf81f16-e9aa-44f3-b7fb-76427c019511" alt="first_screen" align="left" width="200"  style="margin: 10px;"><br>
