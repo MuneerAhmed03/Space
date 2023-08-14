@@ -8,7 +8,7 @@ Space is an Android space repition system that enchance learning and enables lon
 
 - **Access local calendar**
 
-	<img src="https://github.com/MuneerAhmed03/Space/assets/97833696/3cf2f031-c680-4185-92d7-c737c0e4dfab" alt="first_screen" align="left" width="200" >
+	<img src="https://github.com/MuneerAhmed03/Space/assets/97833696/3cf2f031-c680-4185-92d7-c737c0e4dfab" alt="first_screen" align="left" width="200" ><br>
 
 
 
@@ -31,7 +31,7 @@ Space is an Android space repition system that enchance learning and enables lon
 
 
 - **Record what you learned today**
-<img src="https://github.com/MuneerAhmed03/Space/assets/97833696/0f953348-c6b5-4e6a-b95b-b7e0e001159c" alt="first_screen" align="left" width="200" style="margin: 10px;" ><img src="https://github.com/MuneerAhmed03/Space/assets/97833696/7bf81f16-e9aa-44f3-b7fb-76427c019511" alt="first_screen" align="left" width="200"  style="margin: 10px;">
+<img src="https://github.com/MuneerAhmed03/Space/assets/97833696/0f953348-c6b5-4e6a-b95b-b7e0e001159c" alt="first_screen" align="left" width="200" style="margin: 10px;" ><img src="https://github.com/MuneerAhmed03/Space/assets/97833696/7bf81f16-e9aa-44f3-b7fb-76427c019511" alt="first_screen" align="left" width="200"  style="margin: 10px;"><br>
 
 
 
@@ -75,7 +75,7 @@ Space is an Android space repition system that enchance learning and enables lon
 
 
 
-<img src="https://github.com/MuneerAhmed03/Space/assets/97833696/b1c810b9-b714-4e9b-a60d-6cd831f8fff4" alt="fifth_rem" align="left" width="200" style="margin: 10px;" >
+<img src="https://github.com/MuneerAhmed03/Space/assets/97833696/b1c810b9-b714-4e9b-a60d-6cd831f8fff4" alt="fifth_rem" align="left" width="200" style="margin: 10px;" ><br>
 
 
 
@@ -99,7 +99,7 @@ Space is an Android space repition system that enchance learning and enables lon
 
 
 - **Get Reminders for your notes**
-<img src="https://github.com/MuneerAhmed03/Space/assets/97833696/ca383c22-3601-4fa4-a96b-5227538d54f3" alt="notification" align="left" width="200" style="margin: 10px;" >
+<img src="https://github.com/MuneerAhmed03/Space/assets/97833696/ca383c22-3601-4fa4-a96b-5227538d54f3" alt="notification" align="left" width="200" style="margin: 10px;" ><br>
 
 
 
@@ -122,7 +122,7 @@ Space is an Android space repition system that enchance learning and enables lon
 
 
 - **Delete Note**
-<img src="https://github.com/MuneerAhmed03/Space/assets/97833696/125ee17b-7e07-4ed8-9df3-bc4ebcf8e7f3" alt="fifth_rem" align="left" width="200" style="margin: 10px;" >
+<img src="https://github.com/MuneerAhmed03/Space/assets/97833696/125ee17b-7e07-4ed8-9df3-bc4ebcf8e7f3" alt="fifth_rem" align="left" width="200" style="margin: 10px;" ><br>
 
 
 
