@@ -64,7 +64,7 @@ class CalendarFragment : Fragment(), CalendarAdapter.OnItemListener {
         monthYearText!!.text = monthYearFromDate(selectedDate)
         //dataset
         val daysInMonth = daysInMonthArray(selectedDate)
-        val calendarAdapter = CalendarAdapter(daysInMonth, this)
+        val calendarAdapter = CalendarAdapter(daysInMonth, this, selectedDate)
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), 7)
         calendarRecyclerView!!.layoutManager = layoutManager
         calendarRecyclerView!!.adapter = calendarAdapter

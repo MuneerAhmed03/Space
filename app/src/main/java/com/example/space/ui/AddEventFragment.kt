@@ -7,9 +7,11 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.EXTRA_PACKAGE_NAME
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -45,6 +47,7 @@ class AddEventFragment : BottomSheetDialogFragment() {
     private var dates:MutableList<String>?=null
     private var id: Long = 0L
     private var dateText: String? = null
+    lateinit var appContext: Context
 
     lateinit var note:Note
 
@@ -89,7 +92,8 @@ class AddEventFragment : BottomSheetDialogFragment() {
         // Inflate the layout for this fragment
         _binding= FragmentAddEventBinding.inflate(inflater,container,false)
         val binding=_binding
-        binding?.root?.let { createNotificationChannel(it.context) }
+//        binding?.root?.let { createNotificationChannel(it.context) }
+        context?.let { createNotificationChannel(it) }
         arguments?.let {
             id = it.getLong(ARG_ID, 0L)
             dateText = it.getString(ARG_DATE_TEXT)
@@ -120,9 +124,9 @@ class AddEventFragment : BottomSheetDialogFragment() {
     }
 
 
-    private fun scheduleNotification(context: Context, localDate: LocalDate) {
-        Log.i("schedule Notification", "Scheduled for $localDate")
-        val intent =Intent(context,Notification::class.java)
+    private fun scheduleNotification(localDate: LocalDate) {
+
+        val intent =Intent(appContext,Notification::class.java)
         val title = binding.titleText.text.toString()
         val message = binding.noteText.text.toString()
         intent.putExtra(messageExtra,message)
@@ -130,12 +134,13 @@ class AddEventFragment : BottomSheetDialogFragment() {
 
         val pendingIntent= PendingIntent.getBroadcast(
             context,
-            notificationID.hashCode(),
+            notificationID,
             intent,
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val alarmManager =context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmManager =context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val time =getTime(localDate)
+//        val time = (System.currentTimeMillis()+(10*1000))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (alarmManager.canScheduleExactAlarms()) {
                 alarmManager.setExactAndAllowWhileIdle(
@@ -143,6 +148,13 @@ class AddEventFragment : BottomSheetDialogFragment() {
                     time,
                     pendingIntent
                 )
+
+            }
+            else{
+                val intent = Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                intent.putExtra(EXTRA_PACKAGE_NAME, requireContext().packageName)
+                requireContext().startActivity(intent)
+
             }
         }
         else{
@@ -151,18 +163,33 @@ class AddEventFragment : BottomSheetDialogFragment() {
                 time,
                 pendingIntent
             )
+
         }
     }
 
     private fun getTime(localDate: LocalDate): Long {
-        val calendar=Calendar.getInstance()
+        val timeZone = TimeZone.getTimeZone("Asia/Calcutta")
+        val currentTimeMillis = System.currentTimeMillis()
+        val currentCalendar = Calendar.getInstance(timeZone)
+        currentCalendar.timeInMillis = currentTimeMillis
+
+//        val minute = currentCalendar.get(Calendar.MINUTE)
+//        val hour = currentCalendar.get(Calendar.HOUR)
+        val minute =2
+        val hour = 6
+        val sec= currentCalendar.get(Calendar.SECOND) + (20*1000)
+        val day = localDate.dayOfMonth
+        val month = localDate.monthValue-1
+        val year = localDate.year
+
+        val calendar=Calendar.getInstance(timeZone)
         calendar.set(
-            localDate.year,
-            localDate.monthValue,
-            localDate.dayOfMonth,
-            13,
-            5,
-            0
+            year,
+            month,
+            day,
+            hour,
+            minute,
+            sec
         )
         return calendar.timeInMillis
     }
@@ -175,11 +202,12 @@ class AddEventFragment : BottomSheetDialogFragment() {
         channel.description=desc
         val notificationManager =context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        appContext=requireContext().applicationContext
         dialog?.setOnShowListener {
             val dialog = it as BottomSheetDialog
             val bottomSheet = dialog.findViewById<View>(R.id.add_event)
@@ -197,7 +225,7 @@ class AddEventFragment : BottomSheetDialogFragment() {
                     binding.noteText.text.toString(),
                     date
                 )
-            scheduleNotification(requireContext(),convertStringToLocalDate(date))
+            scheduleNotification(convertStringToLocalDate(date))
             }
 
     }
